@@ -1,10 +1,23 @@
-import {chromium} from "playwright";
+import {chromium} from "playwright"
+import {LoginHelper} from "./class-login-helper";
+import {NavigationHelper} from "./class-navigation-helper";
+import {MailSending} from "./class-mail-sending";
+import {LetterProcessing} from "./class-letter-processing";
+import {DocumentProcessing} from "./class-document-processing";
+import {WaitForTimeOut} from "./class-waitForTimeOut";
 
 (async () => {
 
     const browser = await chromium.launch({headless: false});
     console.log("Начали")
     const page = await browser.newPage();
+
+    const loginHelper = new LoginHelper(page);
+    const navigationHelper = new NavigationHelper(page);
+    const mailsending = new MailSending(page)
+    const letterProcess = new LetterProcessing(page);
+    const documentProcess = new DocumentProcessing(page);
+    const waittime = new WaitForTimeOut(page)
 
     await page.goto('https://mailfence.com/')
 
@@ -13,112 +26,40 @@ import {chromium} from "playwright";
     console.log("Нажали на селектор")
 
     await page.waitForURL('https://mailfence.com/sw?type=L&state=0&lf=mailfence')
+    await loginHelper.waitForLoginPage()
 
     await page.waitForTimeout(1000);
 
-    await page.fill('#UserID', 'ashtonoyan@mailfence.com')
-    await page.fill('#Password', '123456789.Ash')
+
     //await page.waitForTimeout(5000);
-    await page.click('input.btn[type="submit"]')
+    await loginHelper.login('ashtonoyan@mailfence.com', '123456789.Ash')
     console.log("Кнопка нажата")
     await page.waitForTimeout(5000);
 
+    await navigationHelper.goToInbox()
 
-    await page.click('.icon24-Message.toolImg')
-    await page.waitForTimeout(1000);
-    await page.waitForURL('https://mailfence.com/flatx/index.jsp?v=2.8.028#tool=mail&folderoid=639842178')
+    await mailsending.letterCreate()
 
+    await mailsending.fillFields()
 
-    const test = await page.waitForSelector('#mailNewBtn', {state: 'visible'});
-    if (test) {
-        console.log("Is visible");
-        await page.click('#mailNewBtn');
-    } else {
-        console.log("Is hidden");
-    }
+    await mailsending.uploadDocument()
 
-
-    await page.fill('input.GCSDBRWBPL[type="text"]', 'ashtonoyan@mailfence.com')
-    await page.waitForTimeout(5000);
-
-
-    const iframeElement = await page.waitForSelector('iframe.editable');
-
-
-    const frame = await iframeElement.contentFrame();
-
-    if (frame !== null) {
-        await frame.fill('#gwt-uid-32', 'ashtonoyan@mailfence.com');
-    } else {
-        console.error('Не удалось получить доступ к содержимому iframe');
-    }
-
-
-    await page.click('a.GCSDBRWBISB.GCSDBRWBJSB')
-
-    await page.waitForTimeout(2000);
-
-    const element = await page.locator('span.GCSDBRWBGR >> text="С вашего компьютера"');
-    await element.scrollIntoViewIfNeeded();
-    //await element.click({ force: true });
-
-    const fileInput = await page.locator('input[type="file"]');
-
-    await fileInput.setInputFiles('C:/Users/atv00/Downloads/Mailfence e2e UI test case - TestRail (1) (2).pdf');
-    await page.waitForTimeout(1000);
-    await page.click('#mailSend')
-
-    await page.click('#dialBtn_YES')
+    await mailsending.sendMail()
 
     await page.waitForTimeout(10000);
 
-    await page.click('#treeInbox')
+    await navigationHelper.goToTreeInbox()
 
     await page.waitForTimeout(10000);
 
-    const messages = await page.$$('.listSubject');
-    await messages[0].click();
 
-    await page.waitForTimeout(1000);
-    await page.click('a.GCSDBRWBJRB', {button: 'right'});
-    await page.waitForTimeout(1000);
-    await page.click('span.GCSDBRWBGR >> text="Сохранить в документах"');
-    await page.waitForTimeout(1000);
-    await page.click('div.treeItemLabel >> text="Мои документы"');
-    await page.waitForTimeout(1000);
-    await page.click('#dialBtn_OK')
-    await page.waitForTimeout(1000);
+    await letterProcess.processLetter()
 
+    await navigationHelper.goToDocuments()
 
-    await page.click('.icon24-Documents.toolImg')
-    await page.waitForTimeout(1000)
-    await page.click('.GCSDBRWBPJB')
-    await page.waitForTimeout(1000)
-
-    await page.click('div.tbBtnText >> text="Переместить"');
-
-
-    await page.locator('div.GCSDBRWBED.GCSDBRWBO').evaluate(el => {
-        el.style.display = 'block';
-    });
-
+    await documentProcess.processDocument()
     await page.waitForTimeout(5000)
-    await page.evaluate(() => {
-        const overlay = document.querySelector('.GCSDBRWBED.GCSDBRWBO');
-        if (overlay) {
-            overlay.remove();  // Remove the overlay from the DOM
-        }
-    });
-
-    await page.locator('div.treeItemLabel:has-text("Trash")').nth(1).click();
-
-
-    await page.waitForTimeout(1000)
-    await page.locator('div.btnCtn div:has-text("Переместить")').click();
-    await page.waitForTimeout(5000)
-    await page.locator('div.btnCtn div:has-text("Да")').click();
-    await page.waitForTimeout(5000)
-    await page.locator('div.treeItemLabel:has-text("Trash")').click();
+    await navigationHelper.goToTrash()
 
     await page.waitForTimeout(5000)
 
