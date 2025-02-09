@@ -4,7 +4,6 @@ import {NavigationHelper} from "./class-navigation-helper";
 import {MailSending} from "./class-mail-sending";
 import {LetterProcessing} from "./class-letter-processing";
 import {DocumentProcessing} from "./class-document-processing";
-import {WaitForTimeOut} from "./class-waitForTimeOut";
 
 (async () => {
 
@@ -17,7 +16,7 @@ import {WaitForTimeOut} from "./class-waitForTimeOut";
     const mailsending = new MailSending(page)
     const letterProcess = new LetterProcessing(page);
     const documentProcess = new DocumentProcessing(page);
-    const waittime = new WaitForTimeOut(page)
+
 
     await page.goto('https://mailfence.com/')
 

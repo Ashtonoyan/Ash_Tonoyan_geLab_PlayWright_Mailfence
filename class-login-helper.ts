@@ -1,7 +1,7 @@
 import {Page} from "playwright";
 
 
-export class LoginHelper{
+export class LoginHelper {
     private page: Page;
 
     constructor(page: Page) {

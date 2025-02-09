@@ -1,14 +1,14 @@
 import {Page} from "playwright";
 
 
-export class DocumentProcessing{
-    private page:Page;
+export class DocumentProcessing {
+    private page: Page;
 
-    constructor(page:Page){
+    constructor(page: Page) {
         this.page = page;
     }
 
-    async processDocument(){
+    async processDocument() {
         await this.page.click('.GCSDBRWBPJB')
         await this.page.waitForTimeout(1000)
 

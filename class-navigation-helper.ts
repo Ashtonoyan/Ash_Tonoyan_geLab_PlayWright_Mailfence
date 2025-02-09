@@ -9,22 +9,23 @@ export class NavigationHelper {
     }
 
 
-    async goToInbox(){
+    async goToInbox() {
         await this.page.click('.icon24-Message.toolImg')
         await this.page.waitForTimeout(1000);
         await this.page.waitForURL('https://mailfence.com/flatx/index.jsp?v=2.8.028#tool=mail&folderoid=639842178')
     }
 
-    async goToDocuments(){
+    async goToDocuments() {
         await this.page.click('.icon24-Documents.toolImg')
         await this.page.waitForTimeout(1000)
 
     }
-    async goToTrash(){
+
+    async goToTrash() {
         await this.page.locator('div.treeItemLabel:has-text("Trash")').click();
     }
 
-    async goToTreeInbox(){
+    async goToTreeInbox() {
         await this.page.click('#treeInbox')
     }
 }

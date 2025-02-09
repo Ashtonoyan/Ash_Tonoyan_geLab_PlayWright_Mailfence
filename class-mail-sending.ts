@@ -1,14 +1,14 @@
 import {Page} from "playwright";
 
 
-export class MailSending{
+export class MailSending {
     private page: Page;
 
     constructor(page: Page) {
         this.page = page;
     }
 
-    async letterCreate(){
+    async letterCreate() {
         const test = await this.page.waitForSelector('#mailNewBtn', {state: 'visible'});
         if (test) {
             console.log("Is visible");
@@ -18,7 +18,7 @@ export class MailSending{
         }
     }
 
-    async fillFields(){
+    async fillFields() {
         await this.page.fill('input.GCSDBRWBPL[type="text"]', 'ashtonoyan@mailfence.com')
         await this.page.waitForTimeout(5000);
 
@@ -35,7 +35,7 @@ export class MailSending{
 
     }
 
-    async uploadDocument(){
+    async uploadDocument() {
         await this.page.click('a.GCSDBRWBISB.GCSDBRWBJSB')
 
         await this.page.waitForTimeout(2000);
@@ -50,7 +50,7 @@ export class MailSending{
         await this.page.waitForTimeout(1000);
     }
 
-    async sendMail(){
+    async sendMail() {
         await this.page.click('#mailSend')
 
         await this.page.click('#dialBtn_YES')

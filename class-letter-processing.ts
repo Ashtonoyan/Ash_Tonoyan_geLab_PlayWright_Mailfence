@@ -1,23 +1,22 @@
 import {Page} from "playwright";
 
 
-
-export class LetterProcessing{
+export class LetterProcessing {
     private page: Page;
 
-    constructor(page: Page){
+    constructor(page: Page) {
         this.page = page;
     }
 
-    async processLetter(){
+    async processLetter() {
         await this.page.waitForTimeout(3000); // Даем время на обновление страницы
         console.log("We are here")
-       /* const messages = await this.page.$$('.listSubject');
-        if (messages.length > 0) {
-            await messages[0].click();
-        } else {
-            console.log("Сообщения не найдены");
-        }*/
+        /* const messages = await this.page.$$('.listSubject');
+         if (messages.length > 0) {
+             await messages[0].click();
+         } else {
+             console.log("Сообщения не найдены");
+         }*/
 
         const messages = await this.page.locator('div.listSubject:has-text("[Без темы]")');
         await messages.first().click();
