@@ -29,7 +29,7 @@ import {chromium} from "playwright";
     await page.waitForURL('https://mailfence.com/flatx/index.jsp?v=2.8.028#tool=mail&folderoid=639842178')
 
 
-    const test = await page.waitForSelector('#mailNewBtn', { state: 'visible' });
+    const test = await page.waitForSelector('#mailNewBtn', {state: 'visible'});
     if (test) {
         console.log("Is visible");
         await page.click('#mailNewBtn');
@@ -47,7 +47,11 @@ import {chromium} from "playwright";
 
     const frame = await iframeElement.contentFrame();
 
-    await frame.fill('#gwt-uid-32', 'ashtonoyan@mailfence.com')
+    if (frame !== null) {
+        await frame.fill('#gwt-uid-32', 'ashtonoyan@mailfence.com');
+    } else {
+        console.error('Не удалось получить доступ к содержимому iframe');
+    }
 
 
     await page.click('a.GCSDBRWBISB.GCSDBRWBJSB')
@@ -66,17 +70,17 @@ import {chromium} from "playwright";
 
     await page.click('#dialBtn_YES')
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(10000);
 
     await page.click('#treeInbox')
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(10000);
 
     const messages = await page.$$('.listSubject');
     await messages[0].click();
 
     await page.waitForTimeout(1000);
-    await page.click('a.GCSDBRWBJRB', { button: 'right' });
+    await page.click('a.GCSDBRWBJRB', {button: 'right'});
     await page.waitForTimeout(1000);
     await page.click('span.GCSDBRWBGR >> text="Сохранить в документах"');
     await page.waitForTimeout(1000);
@@ -109,13 +113,6 @@ import {chromium} from "playwright";
     await page.locator('div.treeItemLabel:has-text("Trash")').nth(1).click();
 
 
-
-
-
-
-
-
-
     await page.waitForTimeout(1000)
     await page.locator('div.btnCtn div:has-text("Переместить")').click();
     await page.waitForTimeout(5000)
@@ -126,4 +123,4 @@ import {chromium} from "playwright";
     await page.waitForTimeout(5000)
 
     await browser.close();
-}) ();
+})();
