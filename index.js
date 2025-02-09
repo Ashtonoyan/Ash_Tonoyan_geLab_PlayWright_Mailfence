@@ -61,31 +61,69 @@ import {chromium} from "playwright";
     const fileInput = await page.locator('input[type="file"]');
 
     await fileInput.setInputFiles('C:/Users/atv00/Downloads/Mailfence e2e UI test case - TestRail (1) (2).pdf');
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.click('#mailSend')
 
     await page.click('#dialBtn_YES')
 
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(1000);
 
     await page.click('#treeInbox')
 
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(1000);
 
     const messages = await page.$$('.listSubject');
     await messages[0].click();
 
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.click('a.GCSDBRWBJRB', { button: 'right' });
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.click('span.GCSDBRWBGR >> text="Сохранить в документах"');
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.click('div.treeItemLabel >> text="Мои документы"');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
     await page.click('#dialBtn_OK')
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
+
+
     await page.click('.icon24-Documents.toolImg')
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000)
+    await page.click('.GCSDBRWBPJB')
+    await page.waitForTimeout(1000)
+
+    await page.click('div.tbBtnText >> text="Переместить"');
+
+
+    await page.locator('div.GCSDBRWBED.GCSDBRWBO').evaluate(el => {
+        el.style.display = 'block';
+    });
+
+    await page.waitForTimeout(5000)
+    await page.evaluate(() => {
+        const overlay = document.querySelector('.GCSDBRWBED.GCSDBRWBO');
+        if (overlay) {
+            overlay.remove();  // Remove the overlay from the DOM
+        }
+    });
+
+    await page.locator('div.treeItemLabel:has-text("Trash")').nth(1).click();
+
+
+
+
+
+
+
+
+
+    await page.waitForTimeout(1000)
+    await page.locator('div.btnCtn div:has-text("Переместить")').click();
+    await page.waitForTimeout(5000)
+    await page.locator('div.btnCtn div:has-text("Да")').click();
+    await page.waitForTimeout(5000)
+    await page.locator('div.treeItemLabel:has-text("Trash")').click();
+
+    await page.waitForTimeout(5000)
 
     await browser.close();
 }) ();
