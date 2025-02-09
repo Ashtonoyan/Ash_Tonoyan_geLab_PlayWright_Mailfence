@@ -50,9 +50,20 @@ import {chromium} from "playwright";
     await frame.fill('#gwt-uid-32', 'ashtonoyan@mailfence.com')
 
 
+    await page.click('a.GCSDBRWBISB.GCSDBRWBJSB')
 
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(2000);
+
+    const element = await page.locator('span.GCSDBRWBGR >> text="С вашего компьютера"');
+    await element.scrollIntoViewIfNeeded();
+    //await element.click({ force: true });
+
+    const fileInput = await page.locator('input[type="file"]');
+
+    await fileInput.setInputFiles('C:/Users/atv00/Downloads/Mailfence e2e UI test case - TestRail (1) (2).pdf');
 
 
+
+    await page.waitForTimeout(10000);
     await browser.close();
 }) ();
